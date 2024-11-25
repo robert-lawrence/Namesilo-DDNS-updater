@@ -7,6 +7,9 @@ do
     -v|--verbose)
       VERBOSE=1
     ;;
+    --strip-ipv6)
+      STRIP_IPV6=1
+    ;;
   esac
 done
 
@@ -29,6 +32,9 @@ namesilo_update() {
 
   ## Retreive current external IP
   local IP_ADDRESS=$( curl -s -${ip_type: -1} https://ifconfig.co/ip )
+  if [[ ! -z "$STRIP_IPV6" ]]; then
+    IP_ADDRESS=$( echo "IP_ADDRESS" | awk '{sub("::.*","::1")}1' )
+  fi
   if [[ -z "$IP_ADDRESS" || "$IP_ADDRESS" == *"error"* ]] || [[ "$ip_type" == "V6" && ! "$IP_ADDRESS" =~ ":" ]]; then
     [[ $VERBOSE ]] && printf "IP$ip_type Address can't be determined ($IP_ADDRESS)\n"
     update_line_or_add_one "Address can't be determined"

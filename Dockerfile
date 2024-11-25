@@ -1,4 +1,4 @@
-FROM lsiobase/alpine:3.15
+FROM alpine/alpine:latest
 
 RUN apk add --no-cache bash curl libxml2-utils
 
